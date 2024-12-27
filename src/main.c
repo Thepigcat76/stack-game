@@ -103,7 +103,6 @@ int main() {
   float speed = 5.0f;
 
   // Set the target FPS
-  SetTargetFPS(60);
 
   Camera2D camera = {0};
   camera.target =
@@ -112,22 +111,27 @@ int main() {
                             screen_height / 2.0f}; // Offset from center
   camera.rotation = 0.0f; // No rotation initially
   camera.zoom = 1.0f;     // Default zoom level
+  SetTargetFPS(60);
 
   // Main game loop
   while (!WindowShouldClose()) {           // Check if the window should close
     // Update
-    if (IsKeyDown(KEY_UP))
-      camera.target.y += 5;
+    if (IsKeyDown(KEY_UP)){
+      camera.target.y -= 5;
+      player_position.y -= 5;
+      }
 
     // Draw
     BeginDrawing();
-    ClearBackground(RAYWHITE);                    // End 3D mode
+    ClearBackground(RAYWHITE); // End 3D mode
+    BeginMode2D(camera);       // Start 2D mode
 
     element_draw(&GRASS, vec2(200, 0));
     element_draw(&DIRT, vec2(200, 200));
     element_draw(&STONE, vec2(200, 400));
     layer_draw(&layer);
     DrawTextureEx(texture, player_position, 0, 4, WHITE);
+    EndMode2D(); // End 2D mode
     EndDrawing();
   }
 
