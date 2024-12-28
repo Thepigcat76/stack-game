@@ -9,15 +9,26 @@ typedef struct {
   char *name;
   Texture2D texture;
   float scale;
+  bool has_texture;
+} ElementType;
+
+extern ElementType AIR;
+extern ElementType STONE;
+extern ElementType GRASS;
+extern ElementType DIRT;
+
+ElementType element_type_new(char *name, float scale);
+
+bool element_type_cmp(ElementType type0, ElementType type1);
+
+typedef struct {
+  ElementType type;
+  Rectangle box;
 } Element;
 
-extern Element STONE;
-extern Element GRASS;
-extern Element DIRT;
+Element element_new(ElementType type, Vector2 pos);
 
-Element element_new(char *name, float scale);
-
-void element_draw(const Element *elem, Vector2 pos);
+void element_draw(const Element *elem);
 
 typedef struct {
   Element elements[16][16];
@@ -25,7 +36,7 @@ typedef struct {
 
 Layer layer_generate();
 
-void layer_draw(Layer *layer);
+void layer_draw(const Layer *layer);
 
 DEFINE_STACK_EXPORTS(Layer);
 
