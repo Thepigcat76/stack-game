@@ -104,6 +104,16 @@ int main() {
     Vector2 mouse_world_pos = GetScreenToWorld2D(GetMousePosition(), camera);
     Rectangle box = layer.elements[0][0].box;
 
+    uint32_t x_index =
+        (uint32_t)(mouse_world_pos.x / (16 * DEFAULT_ELEMENT_SIZE));
+    uint32_t y_index =
+        (uint32_t)(mouse_world_pos.y / (16 * DEFAULT_ELEMENT_SIZE));
+    Rectangle rec = (Rectangle){.x = x_index * (16 * DEFAULT_ELEMENT_SIZE),
+                                .y = y_index * (16 * DEFAULT_ELEMENT_SIZE),
+                                .width = (16 * DEFAULT_ELEMENT_SIZE),
+                                .height = (16 * DEFAULT_ELEMENT_SIZE)};
+    rec_draw_outline(&rec, BLUE);
+
     if (CheckCollisionPointRec(mouse_world_pos, box)) {
       rec_draw_outline(&box, BLUE);
       if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
@@ -112,6 +122,16 @@ int main() {
             (ElementWindow){.type = WINDOW_FURNACE,
                             .var = furnace_window_new(&layer.elements[0][0])};
       }
+    }
+    
+    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !(x_index == 0 && y_index == 0)) {
+      layer.elements[y_index][x_index] =
+          element_new(DIRT, vec2(x_index * (16 * DEFAULT_ELEMENT_SIZE),
+                                 y_index * (16 * DEFAULT_ELEMENT_SIZE)));
+    } else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+      layer.elements[y_index][x_index] =
+          element_new(AIR, vec2(x_index * (16 * DEFAULT_ELEMENT_SIZE),
+                                 y_index * (16 * DEFAULT_ELEMENT_SIZE)));
     }
 
     EndMode2D();
