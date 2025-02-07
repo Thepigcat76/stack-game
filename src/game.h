@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data.h"
+#include "data/data.h"
 #include "raylib.h"
 #include "stack.h"
 
@@ -21,7 +21,7 @@ typedef struct {
   bool stores_custom_data;
   void *init_elem;
   void *tick;
-} ElementType;
+} TileType;
 
 extern ElementType AIR;
 extern ElementType STONE;
@@ -35,10 +35,10 @@ typedef struct _element {
   DataMap custom_data;
   void (*init_elem)(const struct _element *elem);
   void (*tick)(struct _element *elem);
-} Element;
+} TileInstance;
 
-typedef void (*ElementInitFunc)(const Element *elem);
-typedef void (*ElementTickFunc)(Element *elem);
+typedef void (*ElementInitFunc)(const TileInstance *elem);
+typedef void (*ElementTickFunc)(TileInstance *elem);
 
 ElementType element_type_new_advanced(char *name,
                                       ElementInitFunc init_elem_func,
@@ -48,12 +48,12 @@ ElementType element_type_new_simple(char *name);
 
 bool element_type_cmp(ElementType type0, ElementType type1);
 
-Element element_new(ElementType type, Vector2 pos);
+TileInstance element_new(ElementType type, Vector2 pos);
 
-void element_draw(const Element *elem);
+void element_draw(const TileInstance *elem);
 
 typedef struct {
-  Element elements[LAYER_ELEMENTS_AMOUNT][LAYER_ELEMENTS_AMOUNT];
+  TileInstance elements[LAYER_ELEMENTS_AMOUNT][LAYER_ELEMENTS_AMOUNT];
   Vector2 ticking_elements[LAYER_ELEMENTS_AMOUNT * LAYER_ELEMENTS_AMOUNT];
   Vector2 custom_data_elements[LAYER_ELEMENTS_AMOUNT * LAYER_ELEMENTS_AMOUNT];
 } Layer;

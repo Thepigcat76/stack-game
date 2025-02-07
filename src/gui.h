@@ -13,7 +13,7 @@ typedef struct {
   uint32_t width;
   uint32_t height;
   uint32_t scale;
-  Element *element;
+  TileInstance *element;
 } ElementWindowInfo;
 
 typedef struct {
@@ -32,12 +32,12 @@ typedef struct {
 
 ElementWindowInfo element_window_info_new(Vector2 pos, uint32_t width,
                                           uint32_t height, uint32_t scale,
-                                          Element *element);
+                                          TileInstance *element);
 
-ElementWindowInfo element_window_info_new_simple(Element *element);
+ElementWindowInfo element_window_info_new_simple(TileInstance *element);
 
 void element_window_tick(ElementWindow *window);
 
 void element_window_draw(const ElementWindow *window);
 
-FurnaceWindow furnace_window_new(Element *element);
+FurnaceWindow furnace_window_new(TileInstance *element);

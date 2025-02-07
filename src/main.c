@@ -48,7 +48,7 @@ int main() {
 
   while (!WindowShouldClose()) {
     for (size_t i = 0; i < 4; i++) {
-      Element elem = layer.elements[0][0];
+      TileInstance elem = layer.elements[0][0];
       player.collissions[i] =
           elem.type.is_solid
               ? CheckCollisionRecs(rec_offset_direction(&player.box, i, speed),

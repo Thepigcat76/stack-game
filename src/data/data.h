@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include "bytebuf.h"
 
 typedef struct {
   char **keys;
@@ -24,6 +25,7 @@ typedef struct _data {
     DATA_TYPE_CHAR,
     DATA_TYPE_FLOAT,
     DATA_TYPE_DOUBLE,
+    DATA_TYPE_STRING,
   } type;
   union {
     DataMap data_map;
@@ -34,9 +36,16 @@ typedef struct _data {
     char data_char;
     float data_float;
     double data_double;
+    char *data_string;
   } var;
 } Data;
 
 Data data_map_get(const DataMap *data_map, char *key);
 
 void data_map_insert(DataMap *data_map, char *key, Data val);
+
+void byte_buf_write_data(ByteBuf *buf, Data data);
+
+void byte_buf_write_data(ByteBuf *buf, Data data);
+
+Data byte_buf_read_data(ByteBuf *buf);
