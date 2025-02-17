@@ -1,16 +1,17 @@
 #include "gui.h"
 #include "mymath.h"
 #include "utils.h"
-#include <raylib.h>
+#include "raylib.h"
+#include "tiles/tile.h"
 
 ElementWindowInfo element_window_info_new(Vector2 pos, uint32_t width,
                                           uint32_t height, uint32_t scale,
-                                          Element *element) {
+                                          TileInstance *element) {
   return (ElementWindowInfo){
       .pos = pos, .width = width, .height = height, .element = element};
 }
 
-ElementWindowInfo element_window_info_new_simple(Element *element) {
+ElementWindowInfo element_window_info_new_simple(TileInstance *element) {
   ElementWindowInfo info;
   info.width = DEFAULT_WINDOW_WIDTH;
   info.height = DEFAULT_WINDOW_HEIGHT;
@@ -36,7 +37,7 @@ void element_window_draw(const ElementWindow *window) {
   }
 }
 
-FurnaceWindow furnace_window_new(Element *element) {
+FurnaceWindow furnace_window_new(TileInstance *element) {
   return (FurnaceWindow){
       .background = load_texture("furnace_gui"),
       .window_info = element_window_info_new_simple(element),

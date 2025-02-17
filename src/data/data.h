@@ -40,6 +40,8 @@ typedef struct _data {
   } var;
 } Data;
 
+DataMap data_map_new(size_t capacity);
+
 Data data_map_get(const DataMap *data_map, char *key);
 
 void data_map_insert(DataMap *data_map, char *key, Data val);

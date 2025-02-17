@@ -5,6 +5,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+DataMap data_map_new(size_t capacity) {
+  return (DataMap) {
+    .keys = malloc(capacity),
+    .values = malloc(capacity * sizeof(Data)),
+    .capacity = capacity,
+    .len = 0,
+  };
+}
+
 bool data_map_contains(const DataMap *data_map, char *key) {
   for (size_t i = 0; i < data_map->len; i++) {
     if (strcmp(key, data_map->keys[i]) == 0) {
@@ -59,6 +68,9 @@ void byte_buf_write_data(ByteBuf *buf, Data data) {
   case DATA_TYPE_STRING:
     byte_buf_write_string(buf, data.var.data_string);
     break;
+  case DATA_TYPE_MAP:
+    byte_buf_write_data_map(buf, &data.var.data_map);
+    break;
   default:
     fprintf(stderr, "Error writing data");
   }
@@ -80,7 +92,13 @@ Data byte_buf_read_data(ByteBuf *buf) {
     char *string = byte_buf_read_string_heap(buf);
     return (Data){.type = type, .var = {.data_string = string}};
   }
+  case DATA_TYPE_MAP: {
+    DataMap map = data_map_new(400);
+    byte_buf_read_data_map(buf, &map);
+    return (Data){.type = type, .var = {.data_map = map}};
+  }
   default:
     fprintf(stderr, "Error reading data");
+    exit(1);
   }
 }

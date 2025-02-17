@@ -33,3 +33,5 @@ typedef struct _element {
 
 typedef void (*ElementInitFunc)(const TileInstance *elem);
 typedef void (*ElementTickFunc)(TileInstance *elem);
+
+TileInstance tile_new(TileType type, Vector2 pos);

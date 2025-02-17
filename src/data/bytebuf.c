@@ -1,4 +1,5 @@
 #include "bytebuf.h"
+#include <stdio.h>
 #include <string.h>
 
 void byte_buf_write_byte(ByteBuf *buf, uint8_t byte) {
@@ -64,7 +65,7 @@ char *byte_buf_read_string_heap(ByteBuf *buf) {
   return str_buf;
 }
 
-void byte_buf_to_bin(ByteBuf *buf, char *str_buf) {
+void byte_buf_to_bin(const ByteBuf *buf, char *str_buf) {
   size_t str_index = 0;
   for (int i = 0; i < buf->writer_index; i++) {
     for (int j = 7; j >= 0; j--) {
@@ -85,4 +86,33 @@ void byte_buf_from_bin(ByteBuf *buf, const char *str_buf) {
     }
     buf->bytes[i] = byte;
   }
+}
+
+void byte_buf_from_file(ByteBuf *buf) {
+  FILE *f = fopen("bytes.bin", "rb");
+  if (!f) {
+    printf("Failed to open file for reading\n");
+    exit(1);
+  }
+
+  char file_content[buf->capacity * 8 + 1];
+  fread(file_content, sizeof(char), sizeof(file_content) - 1, f);
+  fclose(f);
+  file_content[sizeof(file_content) - 1] = '\0';
+
+  byte_buf_from_bin(buf, file_content);
+}
+
+void byte_buf_to_file(const ByteBuf *buf) {
+  FILE *f = fopen("bytes.bin", "wb");
+  if (!f) {
+    printf("Failed to open file for writing\n");
+    exit(1);
+  }
+
+  char bin_str[100 * 8 + 1];
+  byte_buf_to_bin(buf, bin_str);
+
+  fwrite(bin_str, sizeof(char), strlen(bin_str), f);
+  fclose(f);
 }

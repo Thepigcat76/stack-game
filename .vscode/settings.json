@@ -4,6 +4,8 @@
         "string.h": "c",
         "stdbool.h": "c",
         "data.h": "c",
-        "bytebuf.h": "c"
+        "bytebuf.h": "c",
+        "tiles.h": "c",
+        "tile.h": "c"
     }
 }

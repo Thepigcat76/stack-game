@@ -26,9 +26,13 @@ void byte_buf_read_string(ByteBuf *buf, char *str_buf);
 
 char *byte_buf_read_string_heap(ByteBuf *buf);
 
-void byte_buf_to_bin(ByteBuf *buf, char *str_buf);
+void byte_buf_to_bin(const ByteBuf *buf, char *str_buf);
 
 void byte_buf_from_bin(ByteBuf *buf, const char *str_buf);
+
+void byte_buf_from_file(ByteBuf *buf);
+
+void byte_buf_to_file(const ByteBuf *buf);
 
 #define byte_buf_write_list(buf, func, list, len)                              \
   byte_buf_write_int(buf, len);                                                \
