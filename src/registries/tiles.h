@@ -1,15 +1,16 @@
 #include "../tiles/tile.h"
-
-#define TILES_AMOUNT 5
+#include "registry.h"
 
 #define DEFAULT_TILE_SIZE 4
 
-extern TileType TILES[TILES_AMOUNT];
+create_registry(TileType)
 
-extern TileType AIR;
-extern TileType STONE;
-extern TileType GRASS;
-extern TileType DIRT;
-extern TileType FURNACE;
+extern Registry(TileType) TILES;
 
-void create_tiles();
+extern TileType TILE_AIR;
+extern TileType TILE_STONE;
+extern TileType TILE_GRASS;
+extern TileType TILE_DIRT;
+extern TileType TILE_FURNACE;
+
+void init_tiles();

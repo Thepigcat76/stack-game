@@ -7,12 +7,6 @@
 
 #define LAYER_TILES_AMOUNT 16
 
-TileType element_type_new_advanced(char *name,
-                                      ElementInitFunc init_elem_func,
-                                      ElementTickFunc tick_func);
-
-TileType element_type_new_simple(char *name);
-
 bool element_type_cmp(TileType type0, TileType type1);
 
 void element_draw(const TileInstance *elem);

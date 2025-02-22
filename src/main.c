@@ -7,6 +7,8 @@
 #include "tiles/tile.h"
 #include "data/bytebuf.h"
 #include "data/data.h"
+#include <registries/items.h>
+#include <registries/registry.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,9 +37,9 @@ void byte_buf_write_tile_type(ByteBuf *buf, const TileType *type) {
 
 TileType byte_buf_read_tile_type(ByteBuf *buf) {
   char *name = byte_buf_read_string_heap(buf);
-  for (int i = 0; i < TILES_AMOUNT; i++) {
-    if (strcmp(name, TILES[i].name) == 0) {
-      return TILES[i];
+  for (int i = 0; i < TILES.len; i++) {
+    if (strcmp(name, registry_get(TILES, i).name) == 0) {
+      return registry_get(TILES, i);
     }
   }
   fprintf(stderr, "Cannot read tile with name: %s\n", name);
@@ -84,9 +86,9 @@ void save_data(Layer *layer) {
   uint8_t bytes[4000];
   ByteBuf buf = {
       .bytes = bytes, .writer_index = 0, .reader_index = 0, .capacity = 4000};
-  for (int i = 0; i < TILES_AMOUNT; i++) {
+  for (int i = 0; i < TILES.len; i++) {
     byte_buf_write_list(&buf, byte_buf_write_tile_instance, &layer->tiles[i],
-                        TILES_AMOUNT);
+                        TILES.len);
   }
 }
 
@@ -97,7 +99,8 @@ int main() {
   InitWindow(screen_width, screen_height, "Basic Raylib Program");
   SetExitKey(0);
 
-  create_tiles();
+  init_tiles();
+  init_items();
 
   uint8_t read_bytes[4000];
   ByteBuf read_buf = {.bytes = read_bytes, .reader_index = 0, .writer_index = 0, .capacity = 4000};
@@ -114,18 +117,18 @@ int main() {
 
   SetTargetFPS(60);
 
-  const TileInstance elem = layer.tiles[0][0];
-  elem.init_elem(&elem);
+  //const TileInstance elem = layer.tiles[0][0];
+  //elem.init_elem(&elem);
 
   while (!WindowShouldClose()) {
-    for (size_t i = 0; i < 4; i++) {
+    /*for (size_t i = 0; i < 4; i++) {
       TileInstance elem = layer.tiles[0][0];
       player.collissions[i] =
           elem.type.is_solid
               ? CheckCollisionRecs(rec_offset_direction(&player.box, i, speed),
                                    elem.box)
               : false;
-    }
+    }*/
 
     if (IsKeyDown(KEY_UP)) {
       if (!player.collissions[UP]) {
@@ -196,11 +199,11 @@ int main() {
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) &&
         !(x_index == 0 && y_index == 0)) {
       layer.tiles[y_index][x_index] =
-          tile_new(DIRT, vec2(x_index * (16 * DEFAULT_TILE_SIZE),
+          tile_new(TILE_DIRT, vec2(x_index * (16 * DEFAULT_TILE_SIZE),
                               y_index * (16 * DEFAULT_TILE_SIZE)));
     } else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
       layer.tiles[y_index][x_index] =
-          tile_new(AIR, vec2(x_index * (16 * DEFAULT_TILE_SIZE),
+          tile_new(TILE_AIR, vec2(x_index * (16 * DEFAULT_TILE_SIZE),
                              y_index * (16 * DEFAULT_TILE_SIZE)));
     }
 

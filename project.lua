@@ -4,7 +4,7 @@ Props = {
     std = "c17",
     version = "0.1",
     type = "bin",
-    compiler = "clang",
+    compiler = "gcc",
 }
 
 -- external dependenciess
