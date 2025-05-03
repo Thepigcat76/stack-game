@@ -1,9 +1,10 @@
 #include "game.h"
 #include "mymath.h"
-#include <raylib.h>
-#include <registries/registry.h>
-#include <string.h>
+#include "registries/registry.h"
 #include "registries/tiles.h"
+#include <raylib.h>
+#include <stdio.h>
+#include <string.h>
 
 DEFINE_STACK(Layer);
 
@@ -21,14 +22,16 @@ void tile_draw(const TileInstance *elem) {
 }
 
 Layer layer_generate() {
+  uint8_t tiles = TILES.len - 1;
   Layer layer;
   for (uint32_t y = 0; y < 16; y++) {
     for (uint32_t x = 0; x < 16; x++) {
-      int32_t rand = random_number(0, 3);
+      int32_t rand = random_number(0, tiles);
       TileType tile_type = registry_get(TILES, rand);
+      printf("Type: %s\n", tile_type.name);
 
       while (!tile_type_cmp(tile_type, TILE_AIR) && rand != 0) {
-        rand = random_number(0, 3);
+        rand = random_number(0, tiles);
         tile_type = registry_get(TILES, rand);
       }
 
@@ -40,7 +43,7 @@ Layer layer_generate() {
                    tile_type_cmp(tile_type, TILE_GRASS)) {
           int32_t rand = 0;
           while (tile_type_cmp(tile_type, TILE_GRASS)) {
-            rand = random_number(0, 3);
+            rand = random_number(0, tiles);
             tile_type = registry_get(TILES, rand);
           }
         } else if (tile_type_cmp(above_elem.type, TILE_AIR)) {

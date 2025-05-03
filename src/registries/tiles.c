@@ -8,6 +8,12 @@
 
 Registry(TileType) TILES;
 
+TileType TILE_AIR;
+TileType TILE_STONE;
+TileType TILE_GRASS;
+TileType TILE_DIRT;
+TileType TILE_FURNACE;
+
 static TileType tile_type_new_air();
 
 TileType tile_type_new_simple(char *name);

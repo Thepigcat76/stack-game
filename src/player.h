@@ -1,6 +1,5 @@
 #pragma once
 
-#include "gui.h"
 #include "raylib.h"
 #include <stdint.h>
 
@@ -21,7 +20,7 @@ typedef struct {
     Rectangle box;
     uint8_t scale;
     bool collissions[4];
-    ElementWindow current_window;
+    //ElementWindow current_window;
     bool window_open;
 } Player;
 

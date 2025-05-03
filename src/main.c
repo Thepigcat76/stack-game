@@ -1,14 +1,13 @@
+#include "data/bytebuf.h"
+#include "data/data.h"
 #include "game.h"
-#include "gui.h"
 #include "mymath.h"
 #include "player.h"
 #include "raylib.h"
+#include "registries/items.h"
+#include "registries/registry.h"
 #include "registries/tiles.h"
 #include "tiles/tile.h"
-#include "data/bytebuf.h"
-#include "data/data.h"
-#include <registries/items.h>
-#include <registries/registry.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -102,12 +101,12 @@ int main() {
   init_tiles();
   init_items();
 
-  uint8_t read_bytes[4000];
-  ByteBuf read_buf = {.bytes = read_bytes, .reader_index = 0, .writer_index = 0, .capacity = 4000};
-  byte_buf_from_file(&read_buf);
+  // uint8_t read_bytes[4000];
+  // ByteBuf read_buf = {.bytes = read_bytes, .reader_index = 0, .writer_index =
+  // 0, .capacity = 4000}; byte_buf_from_file(&read_buf);
 
   Layer layer = layer_generate();
-  layer.tiles[0][0] = byte_buf_read_tile_instance(&read_buf);
+  // layer.tiles[0][0] = byte_buf_read_tile_instance(&read_buf);
   Player player = player_new("player", 4);
 
   float speed = 5.0f;
@@ -117,8 +116,8 @@ int main() {
 
   SetTargetFPS(60);
 
-  //const TileInstance elem = layer.tiles[0][0];
-  //elem.init_elem(&elem);
+  // const TileInstance elem = layer.tiles[0][0];
+  // elem.init_elem(&elem);
 
   while (!WindowShouldClose()) {
     /*for (size_t i = 0; i < 4; i++) {
@@ -129,6 +128,14 @@ int main() {
                                    elem.box)
               : false;
     }*/
+
+    if (IsKeyDown(KEY_C)) {
+      camera.zoom -= GetFrameTime();
+    }
+
+    if (IsKeyDown(KEY_D)) {
+      camera.zoom += GetFrameTime();
+    }
 
     if (IsKeyDown(KEY_UP)) {
       if (!player.collissions[UP]) {
@@ -190,9 +197,9 @@ int main() {
       rec_draw_outline(&box, BLUE);
       if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
         player.window_open = true;
-        player.current_window =
-            (ElementWindow){.type = WINDOW_FURNACE,
-                            .var = furnace_window_new(&layer.tiles[0][0])};
+        // player.current_window =
+        //     (ElementWindow){.type = WINDOW_FURNACE,
+        //                     .var = furnace_window_new(&layer.tiles[0][0])};
       }
     }
 
@@ -200,17 +207,20 @@ int main() {
         !(x_index == 0 && y_index == 0)) {
       layer.tiles[y_index][x_index] =
           tile_new(TILE_DIRT, vec2(x_index * (16 * DEFAULT_TILE_SIZE),
-                              y_index * (16 * DEFAULT_TILE_SIZE)));
+                                   y_index * (16 * DEFAULT_TILE_SIZE)));
     } else if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+      int tile_x = layer.tiles[y_index][x_index].box.x;
+      int tile_y = layer.tiles[y_index][x_index].box.y;
+      TraceLog(LOG_INFO, "tile x: %d, tile y: %d, mouse x: %f, mouse y: %f", tile_x, tile_y, mouse_world_pos.x, mouse_world_pos.y);
       layer.tiles[y_index][x_index] =
           tile_new(TILE_AIR, vec2(x_index * (16 * DEFAULT_TILE_SIZE),
-                             y_index * (16 * DEFAULT_TILE_SIZE)));
+                                  y_index * (16 * DEFAULT_TILE_SIZE)));
     }
 
     EndMode2D();
 
     if (player.window_open) {
-      element_window_draw(&player.current_window);
+      // element_window_draw(&player.current_window);
     }
     EndDrawing();
   }
@@ -218,7 +228,8 @@ int main() {
   CloseWindow();
 
   uint8_t bytes[4000];
-  ByteBuf buf = {.bytes = bytes, .writer_index = 0, .reader_index = 0, .capacity = 4000};
+  ByteBuf buf = {
+      .bytes = bytes, .writer_index = 0, .reader_index = 0, .capacity = 4000};
   byte_buf_write_tile_instance(&buf, &layer.tiles[0][0]);
 
   byte_buf_to_file(&buf);
